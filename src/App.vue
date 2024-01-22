@@ -55,6 +55,7 @@
 								<li>Másold ki a token értékét, de ügyelj arra, hogy a "Bearer" szót hagyd el, csak a token
 									maradjon.</li>
 							</ol>
+							<p class="mb-4"><a href="https://cors-anywhere.herokuapp.com/corsdemo" target="_blank" rel="noopener noreferrer">https://cors-anywhere.herokuapp.com/corsdemo</a></p>
 						</div>
 
 					</div>
