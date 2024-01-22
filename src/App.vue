@@ -16,7 +16,7 @@
 			</div>
 		</div>
 		<button @click="fetchData"
-			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+			class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" :disabled="fetching">
 			Küldés
 		</button>
 
@@ -130,6 +130,7 @@ const ordersFetched = ref(false);
 const error = ref(null);
 const orders = ref([]);
 const totalAmount = ref(0);
+const fetching = ref(false);
 
 const startDate = ref('');
 const endDate = ref('');
@@ -143,8 +144,18 @@ const formattedEndDate = computed(() => formatDate(endDate.value));
 
 
 const fetchData = async () => {
+	fetching.value = true
+
+	ordersFetched.value = false
+	error.value = null
+	orders.value = []
+	totalAmount.value = 0
+	startDate.value = ''
+	endDate.value = ''
+
 	if (!bearerToken.value) {
 		error.value = "Kérlek add meg a Bearer Tokent!";
+		fetching.value = false
 		return;
 	}
 
@@ -179,6 +190,8 @@ const fetchData = async () => {
 	} catch (e) {
 		error.value = "Hiba történt a lekérés során. Ellenőrizd a Bearer Tokent!";
 		ordersFetched.value = false;
+	} finally {
+		fetching.value = false
 	}
 };
 
