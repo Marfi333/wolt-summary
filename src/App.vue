@@ -1,5 +1,7 @@
 <template>
 	<div class="container mx-auto p-4 bg-white shadow-lg rounded-lg">
+		<h1 class="text-2xl font-bold text-gray-800 mb-6 text-center">Nem tudod hogyan tehetnéd még rosszabbá a napod? <br><span class="underline">Egyszerű.</span> <br>Nézd meg mennyit költöttél el a Wolt-on!</h1>
+
 		<!-- Bearer Token Input és Információs Gomb -->
 		<div class="mb-6">
 			<label for="bearer-token" class="block text-gray-700 text-sm font-bold mb-2">Bearer Token:</label>
@@ -19,7 +21,7 @@
 		</button>
 
 		<!-- Információs Modal -->
-		<div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full"
+		<div v-if="showInfoModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
 			@click.self="toggleInfoModal">
 			<div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
 				<div class="mt-3 text-center">
@@ -27,7 +29,8 @@
 					<div class="mt-2">
 						<div class="p-4 max-w-xl mx-auto">
 							<h2 class="text-lg font-semibold mb-4">Nem tudod mi az a Bearer Token?</h2>
-							<p class="mb-4">Ezek szerint nagy valószínűséggel egy iStyle magyarországi dolgozó lehetsz. Szervusz Rigli! Az alábbiakban megtudhatod miért van erre szükség:</p>
+							<p class="mb-4">Ezek szerint nagy valószínűséggel egy iStyle magyarországi dolgozó lehetsz.
+								Szervusz Rigli! Az alábbiakban megtudhatod miért van erre szükség:</p>
 							<h2 class="text-lg font-semibold mb-4">Mi az a Bearer Token?</h2>
 							<p class="mb-4">A Bearer Token egy biztonsági mechanizmus, amelyet az API-k használnak a
 								hitelesítés és azonosítás céljából. Ez egy hosszú karakterlánc, amely egyedi azonosítóként
@@ -77,12 +80,12 @@
 			<!-- Összesítési időszak megjelenítése -->
 			<div class="flex justify-center items-center space-x-2 mb-4">
 				<label for="start-date" class="font-medium text-gray-600">Kezdete:</label>
-				<input type="date" id="start-date" class="p-2 border border-gray-300 rounded" v-model="startDate"
-					@change="fetchData">
+				<input type="date" id="start-date" class="p-2 border border-gray-300 rounded" v-model="formattedStartDate"
+					>
 				<span class="text-gray-500">és</span>
 				<label for="end-date" class="font-medium text-gray-600">Vége:</label>
-				<input type="date" id="end-date" class="p-2 border border-gray-300 rounded" v-model="endDate"
-					@change="fetchData">
+				<input type="date" id="end-date" class="p-2 border border-gray-300 rounded" v-model="formattedEndDate"
+					>
 			</div>
 
 			<div class="text-center mb-3">
@@ -135,6 +138,10 @@ const toggleInfoModal = () => {
 	showInfoModal.value = !showInfoModal.value;
 };
 
+const formattedStartDate = computed(() => formatDate(startDate.value));
+const formattedEndDate = computed(() => formatDate(endDate.value));
+
+
 const fetchData = async () => {
 	if (!bearerToken.value) {
 		error.value = "Kérlek add meg a Bearer Tokent!";
@@ -161,8 +168,10 @@ const fetchData = async () => {
 			}
 		}
 
-		endDate.value = new Date(orders.value[0]['payment_time']['$date'])
+		endDate.value = (new Date(orders.value[0]['payment_time']['$date'])).toLocaleDateString()
 		startDate.value = new Date(orders.value[orders.value.length - 1]['payment_time']['$date'])
+
+		console.log(endDate.value, startDate.value)
 
 		totalAmount.value = orders.value.reduce((sum, order) => sum + order.payment_amount, 0) / 100;
 		ordersFetched.value = true;
@@ -185,4 +194,19 @@ const sortedRestaurants = computed(() => {
 	});
 	return Object.values(restaurants).sort((a, b) => b.orders - a.orders);
 });
+
+function formatDate(date) {
+  const d = new Date(date);
+  let month = '' + (d.getMonth() + 1);
+  let day = '' + d.getDate();
+  const year = d.getFullYear();
+
+  if (month.length < 2) 
+      month = '0' + month;
+  if (day.length < 2) 
+      day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
 </script>
