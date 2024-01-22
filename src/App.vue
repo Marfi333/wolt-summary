@@ -80,11 +80,11 @@
 			<!-- Összesítési időszak megjelenítése -->
 			<div class="flex justify-center items-center space-x-2 mb-4">
 				<label for="start-date" class="font-medium text-gray-600">Kezdete:</label>
-				<input type="date" id="start-date" class="p-2 border border-gray-300 rounded" v-model="formattedStartDate"
+				<input disabled type="date" id="start-date" class="p-2 border border-gray-300 rounded" v-model="formattedStartDate"
 					>
 				<span class="text-gray-500">és</span>
 				<label for="end-date" class="font-medium text-gray-600">Vége:</label>
-				<input type="date" id="end-date" class="p-2 border border-gray-300 rounded" v-model="formattedEndDate"
+				<input disabled type="date" id="end-date" class="p-2 border border-gray-300 rounded" v-model="formattedEndDate"
 					>
 			</div>
 
